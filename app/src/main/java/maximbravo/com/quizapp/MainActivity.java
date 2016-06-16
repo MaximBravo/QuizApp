@@ -22,6 +22,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
     private String[] entry;
+    private TextView questionTextView;
+    private RadioButton a1;
+    private RadioButton a2;
+    private RadioButton a3;
+    private RadioButton a4;
+    private TextView questionHeader;
+    private Button submit;
+    private Button next;
+    private Button start;
+    private RadioGroup rg;
+    private TextView scoreText;
+    private TextView resultsText;
     private RadioButton selected;
     private String numberChoice;
     private String rightChoice;
@@ -62,53 +74,64 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void startApp(View view){
+        questionTextView = (TextView) findViewById(R.id.question);
+        a1 = (RadioButton) findViewById(R.id.answer_1);
+        a2 = (RadioButton) findViewById(R.id.answer_2);
+        a3 = (RadioButton) findViewById(R.id.answer_3);
+        a4 = (RadioButton) findViewById(R.id.answer_4);
+        questionHeader = (TextView) findViewById(R.id.question_header);
+        submit = (Button) findViewById(R.id.submit_button);
+        next = (Button) findViewById(R.id.next_button);
+        start = (Button) findViewById(R.id.start_button);
+        rg = (RadioGroup) findViewById(R.id.answer_box);
+        scoreText = (TextView) findViewById(R.id.score_text);
+        resultsText = (TextView) findViewById(R.id.results);
+
+        questionTextView.setVisibility(View.VISIBLE);
+        a1.setVisibility(View.VISIBLE);
+        a2.setVisibility(View.VISIBLE);
+        a3.setVisibility(View.VISIBLE);
+        a4.setVisibility(View.VISIBLE);
+        questionHeader.setVisibility(View.VISIBLE);
+        submit.setVisibility(View.VISIBLE);
+        next.setVisibility(View.VISIBLE);
+        start.setVisibility(View.INVISIBLE);
+
+        entry = Questions.getEntry(questionNumber);
+        questionTextView.setText(entry[0]);
+        a1.setText(entry[1]);
+        a2.setText(entry[2]);
+        a3.setText(entry[3]);
+        a4.setText(entry[4]);
+        rightChoice = entry[5];
+        questionNumber++;
+        selected = null;
+    }
 
     public void refresh (View view) {
         entry = Questions.getEntry(questionNumber);
-        TextView questionTextView = (TextView) findViewById(R.id.question);
-        RadioButton a1 = (RadioButton) findViewById(R.id.answer_1);
-        RadioButton a2 = (RadioButton) findViewById(R.id.answer_2);
-        RadioButton a3 = (RadioButton) findViewById(R.id.answer_3);
-        RadioButton a4 = (RadioButton) findViewById(R.id.answer_4);
-        TextView questionHeader = (TextView) findViewById(R.id.question_header);
-        Button submit = (Button) findViewById(R.id.submit_button);
-        Button next = (Button) findViewById(R.id.next_button);
-        Button start = (Button) findViewById(R.id.start_button);
-        RadioGroup rg = (RadioGroup) findViewById(R.id.answer_box);
-        TextView scoreText = (TextView) findViewById(R.id.score_text);
-        TextView resultsText = (TextView) findViewById(R.id.results);
-
+        rg.clearCheck();
+        a1.setEnabled(true);
+        a2.setEnabled(true);
+        a3.setEnabled(true);
+        a4.setEnabled(true);
         a1.setTextColor(Color.BLACK);
         a2.setTextColor(Color.BLACK );
         a3.setTextColor(Color.BLACK );
         a4.setTextColor(Color.BLACK );
-        if(selected != null || first) {
-
+        if(selected != null) {
             submit.setEnabled(true);
             if (questionNumber < 10) {
                 next.setEnabled(false);
-
-                questionTextView.setVisibility(View.VISIBLE);
                 questionTextView.setText(entry[0]);
-                a1.setVisibility(View.VISIBLE);
                 a1.setText(entry[1]);
-                a2.setVisibility(View.VISIBLE);
                 a2.setText(entry[2]);
-                a3.setVisibility(View.VISIBLE);
                 a3.setText(entry[3]);
-                a4.setVisibility(View.VISIBLE);
                 a4.setText(entry[4]);
-                questionHeader.setVisibility(View.VISIBLE);
                 questionHeader.setText("Question #" + questionNumber + " of 10!");
-                submit.setVisibility(View.VISIBLE);
-                next.setVisibility(View.VISIBLE);
-                start.setVisibility(View.INVISIBLE);
                 resultsText.setText("");
-                rg.clearCheck();
-
-
                 rightChoice = entry[5];
-
             } else {
                 questionTextView.setVisibility(View.GONE);
                 questionHeader.setVisibility(View.GONE);
@@ -131,35 +154,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void submit (View view){
-        TextView resultsText = (TextView) findViewById(R.id.results);
-
-        RadioButton a1 = (RadioButton) findViewById(R.id.answer_1);
-        RadioButton a2 = (RadioButton) findViewById(R.id.answer_2);
-        RadioButton a3 = (RadioButton) findViewById(R.id.answer_3);
-        RadioButton a4 = (RadioButton) findViewById(R.id.answer_4);
-        Button submit = (Button) findViewById(R.id.submit_button);
-        Button next = (Button) findViewById(R.id.next_button);
+        a1.setEnabled(false);
+        a2.setEnabled(false);
+        a3.setEnabled(false);
+        a4.setEnabled(false);
         if(selected != null) {
             if (numberChoice.equals(rightChoice)) {
                 resultsText.setText("Correct!");
                 selected.setTextColor(Color.parseColor("#388E3C"));
-
                 submit.setEnabled(false);
                 next.setEnabled(true);
                 score++;
             } else {
                 resultsText.setText("Incorrect!");
-                if(entry[5] == "1"){
-
+                if(rightChoice.equals("1")){
                     a1.setTextColor(Color.parseColor("#388E3C"));
                 }
-                if(entry[5] == "2"){
+                if(rightChoice.equals("2")){
                     a2.setTextColor(Color.parseColor("#388E3C"));
                 }
-                if(entry[5] == "3"){
+                if(rightChoice.equals("3")){
                     a3.setTextColor(Color.parseColor("#388E3C"));
                 }
-                if(entry[5] == "4"){
+                if(rightChoice.equals("4")){
                     a4.setTextColor(Color.parseColor("#388E3C"));
                 }
                 selected.setTextColor(Color.parseColor("#C62828"));
