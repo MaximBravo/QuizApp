@@ -1,5 +1,6 @@
 package maximbravo.com.quizapp;
 
+import android.graphics.Color;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
     }
-
+    private String[] entry;
     private RadioButton selected;
     private String numberChoice;
     private String rightChoice;
@@ -61,24 +62,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     public void refresh (View view) {
+        entry = Questions.getEntry(questionNumber);
+        TextView questionTextView = (TextView) findViewById(R.id.question);
+        RadioButton a1 = (RadioButton) findViewById(R.id.answer_1);
+        RadioButton a2 = (RadioButton) findViewById(R.id.answer_2);
+        RadioButton a3 = (RadioButton) findViewById(R.id.answer_3);
+        RadioButton a4 = (RadioButton) findViewById(R.id.answer_4);
+        TextView questionHeader = (TextView) findViewById(R.id.question_header);
+        Button submit = (Button) findViewById(R.id.submit_button);
+        Button next = (Button) findViewById(R.id.next_button);
+        Button start = (Button) findViewById(R.id.start_button);
+        RadioGroup rg = (RadioGroup) findViewById(R.id.answer_box);
+        TextView scoreText = (TextView) findViewById(R.id.score_text);
+        TextView resultsText = (TextView) findViewById(R.id.results);
+
+        a1.setTextColor(Color.BLACK);
+        a2.setTextColor(Color.BLACK );
+        a3.setTextColor(Color.BLACK );
+        a4.setTextColor(Color.BLACK );
         if(selected != null || first) {
-            TextView questionTextView = (TextView) findViewById(R.id.question);
-            RadioButton a1 = (RadioButton) findViewById(R.id.answer_1);
-            RadioButton a2 = (RadioButton) findViewById(R.id.answer_2);
-            RadioButton a3 = (RadioButton) findViewById(R.id.answer_3);
-            RadioButton a4 = (RadioButton) findViewById(R.id.answer_4);
-            TextView questionHeader = (TextView) findViewById(R.id.question_header);
-            Button submit = (Button) findViewById(R.id.submit_button);
-            Button next = (Button) findViewById(R.id.next_button);
-            Button start = (Button) findViewById(R.id.start_button);
-            RadioGroup rg = (RadioGroup) findViewById(R.id.answer_box);
-            TextView scoreText = (TextView) findViewById(R.id.score_text);
-            TextView resultsText = (TextView) findViewById(R.id.results);
+
             submit.setEnabled(true);
             if (questionNumber < 10) {
                 next.setEnabled(false);
-                String[] entry = Questions.getEntry(questionNumber);
+
                 questionTextView.setVisibility(View.VISIBLE);
                 questionTextView.setText(entry[0]);
                 a1.setVisibility(View.VISIBLE);
@@ -96,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
                 start.setVisibility(View.INVISIBLE);
                 resultsText.setText("");
                 rg.clearCheck();
+
+
                 rightChoice = entry[5];
 
             } else {
@@ -120,17 +131,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void submit (View view){
-        TextView tv = (TextView) findViewById(R.id.results);
+        TextView resultsText = (TextView) findViewById(R.id.results);
+
+        RadioButton a1 = (RadioButton) findViewById(R.id.answer_1);
+        RadioButton a2 = (RadioButton) findViewById(R.id.answer_2);
+        RadioButton a3 = (RadioButton) findViewById(R.id.answer_3);
+        RadioButton a4 = (RadioButton) findViewById(R.id.answer_4);
         Button submit = (Button) findViewById(R.id.submit_button);
         Button next = (Button) findViewById(R.id.next_button);
         if(selected != null) {
             if (numberChoice.equals(rightChoice)) {
-                tv.setText("Correct!");
+                resultsText.setText("Correct!");
+                selected.setTextColor(Color.parseColor("#388E3C"));
+
                 submit.setEnabled(false);
                 next.setEnabled(true);
                 score++;
             } else {
-                tv.setText("Incorrect!");
+                resultsText.setText("Incorrect!");
+                if(entry[5] == "1"){
+
+                    a1.setTextColor(Color.parseColor("#388E3C"));
+                }
+                if(entry[5] == "2"){
+                    a2.setTextColor(Color.parseColor("#388E3C"));
+                }
+                if(entry[5] == "3"){
+                    a3.setTextColor(Color.parseColor("#388E3C"));
+                }
+                if(entry[5] == "4"){
+                    a4.setTextColor(Color.parseColor("#388E3C"));
+                }
+                selected.setTextColor(Color.parseColor("#C62828"));
                 submit.setEnabled(false);
                 next.setEnabled(true);
             }

@@ -1,5 +1,7 @@
 package maximbravo.com.quizapp;
 
+import android.view.View;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,6 +94,23 @@ public class Questions {
         ret[5] = options[4];
         return ret;
     }
+//    public static int correctAnswer(int qN){
+//        String[] options = answers.get(qN - 1);
+//        if(options[5].equals("1")){
+//            return 1;
+//        }
+//        if(options[5].equals("2")){
+//            return 2;
+//        }
+//        if(options[5].equals("3")){
+//            return 3;
+//        }
+//        if(options[5].equals("4")){
+//            return 4;
+//        } else {
+//            return 5;
+//        }
+//    }
 
 
 }
