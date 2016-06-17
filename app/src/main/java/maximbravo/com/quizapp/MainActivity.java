@@ -13,6 +13,9 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -21,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
     }
+    private Button reset;
     private String[] entry;
     private TextView questionTextView;
     private RadioButton a1;
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private int questionNumber = 1;
     private int score = 0;
     private boolean first = true;
+    private ArrayList<Integer> questionPool = new ArrayList<>();
 
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
@@ -75,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startApp(View view){
+        reset = (Button) findViewById(R.id.reset_button);
         questionTextView = (TextView) findViewById(R.id.question);
         a1 = (RadioButton) findViewById(R.id.answer_1);
         a2 = (RadioButton) findViewById(R.id.answer_2);
@@ -89,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         resultsText = (TextView) findViewById(R.id.results);
 
         questionTextView.setVisibility(View.VISIBLE);
+        rg.setVisibility(View.VISIBLE);
         a1.setVisibility(View.VISIBLE);
         a2.setVisibility(View.VISIBLE);
         a3.setVisibility(View.VISIBLE);
@@ -97,20 +104,59 @@ public class MainActivity extends AppCompatActivity {
         submit.setVisibility(View.VISIBLE);
         next.setVisibility(View.VISIBLE);
         start.setVisibility(View.INVISIBLE);
-
-        entry = Questions.getEntry(questionNumber);
+        resultsText.setVisibility(View.VISIBLE);
+        questionPool.add(1);
+        questionPool.add(2);
+        questionPool.add(3);
+        questionPool.add(4);
+        questionPool.add(5);
+        questionPool.add(6);
+        questionPool.add(7);
+        questionPool.add(8);
+        questionPool.add(9);
+        questionPool.add(10);
+        entry = Questions.getEntry(getQuestion());
         questionTextView.setText(entry[0]);
+        questionHeader.setText("Question #1 of 10!");
         a1.setText(entry[1]);
         a2.setText(entry[2]);
         a3.setText(entry[3]);
         a4.setText(entry[4]);
         rightChoice = entry[5];
-        questionNumber++;
+        next.setEnabled(false);
         selected = null;
+
+
+
     }
 
+    public int getQuestion(){
+        if(questionPool.size() > 1) {
+            int random = (int) (Math.random() * questionPool.size() + 1);
+            int ret = questionPool.get(random - 1);
+            questionPool.remove(random - 1);
+            return ret;
+        } else {
+            return questionPool.get(0);
+        }
+
+    }
     public void refresh (View view) {
-        entry = Questions.getEntry(questionNumber);
+        questionNumber++;
+        if(questionNumber == 11) {
+            questionTextView.setVisibility(View.INVISIBLE);
+            questionHeader.setVisibility(View.INVISIBLE);
+            rg.setVisibility(View.INVISIBLE);
+            resultsText.setVisibility(View.INVISIBLE);
+            submit.setVisibility(View.INVISIBLE);
+            next.setVisibility(View.INVISIBLE);
+            start.setVisibility(View.INVISIBLE);
+
+            reset.setVisibility(View.VISIBLE);
+            scoreText.setText("Your final score is " + score + " out of 10!");
+
+        }
+        entry = Questions.getEntry(getQuestion());
         rg.clearCheck();
         a1.setEnabled(true);
         a2.setEnabled(true);
@@ -122,29 +168,19 @@ public class MainActivity extends AppCompatActivity {
         a4.setTextColor(Color.BLACK );
         if(selected != null) {
             submit.setEnabled(true);
-            if (questionNumber < 10) {
-                next.setEnabled(false);
-                questionTextView.setText(entry[0]);
-                a1.setText(entry[1]);
-                a2.setText(entry[2]);
-                a3.setText(entry[3]);
-                a4.setText(entry[4]);
-                questionHeader.setText("Question #" + questionNumber + " of 10!");
-                resultsText.setText("");
-                rightChoice = entry[5];
-            } else {
-                questionTextView.setVisibility(View.GONE);
-                questionHeader.setVisibility(View.GONE);
-                rg.setVisibility(View.GONE);
-                resultsText.setVisibility(View.GONE);
-                submit.setVisibility(View.GONE);
-                next.setVisibility(View.GONE);
-                start.setVisibility(View.GONE);
-                scoreText.setText("Your final score is " + score + " out of 10!");
 
-            }
+            next.setEnabled(false);
+            questionTextView.setText(entry[0]);
+            a1.setText(entry[1]);
+            a2.setText(entry[2]);
+            a3.setText(entry[3]);
+            a4.setText(entry[4]);
+            questionHeader.setText("Question #" + questionNumber + " of 10!");
+            resultsText.setText("");
+            rightChoice = entry[5];
 
-            questionNumber++;
+
+
             first = false;
             selected = null;
         } else {
@@ -152,13 +188,22 @@ public class MainActivity extends AppCompatActivity {
             toast.show();
         }
     }
+    public void reset (View view){
+        reset.setVisibility(View.INVISIBLE);
+        scoreText.setText("");
+
+        start.setVisibility(View.VISIBLE);
+        score = 0;
+        questionNumber = 1;
+    }
 
     public void submit (View view){
-        a1.setEnabled(false);
-        a2.setEnabled(false);
-        a3.setEnabled(false);
-        a4.setEnabled(false);
+
         if(selected != null) {
+            a1.setEnabled(false);
+            a2.setEnabled(false);
+            a3.setEnabled(false);
+            a4.setEnabled(false);
             if (numberChoice.equals(rightChoice)) {
                 resultsText.setText("Correct!");
                 selected.setTextColor(Color.parseColor("#388E3C"));

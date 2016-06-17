@@ -43,7 +43,8 @@ public class Questions {
     private static String q8 = "True or false? Bats are mammals.";
     private static String q9 = "Bees are found on every continent of earth except for one, which is it?";
     private static String q10 = "True or false? Cats spend an average of 13 to 14 hours a day sleeping.";
-    private static String[] questions = {q1, q2, q3, q4, q5, q6, q7, q8, q9, q10};
+    private static String q11 = "";
+    private static String[] questions = {q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11};
 
     private static String[] a1 = {"Lettuce", "Bamboo", "Carrots", "Shoots", "2"};
     private static String[] a2 = {"True", "False", "Apples", "Oranges", "2"};
@@ -55,6 +56,7 @@ public class Questions {
     private static String[] a8 = {"Dog", "No", "True", "False", "3"};
     private static String[] a9 = {"Antarctica", "Africa", "Arcitc", "South Pole", "1"};
     private static String[] a10 = {"False", "Trash", "Paper", "True", "4"};
+    private static String[] a11 = {"3", "4", "5", "2", "1"};
     private static ArrayList<String[]> answers = new ArrayList<String[]>();
 
     private static boolean addedAnswers = false;
@@ -70,6 +72,7 @@ public class Questions {
         answers.add(a8);
         answers.add(a9);
         answers.add(a10);
+        answers.add(a11);
     }
 
     public static String[] getEntry(int qN){
