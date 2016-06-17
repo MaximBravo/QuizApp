@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -18,12 +19,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-    }
     private Button reset;
     private String[] entry;
     private TextView questionTextView;
@@ -41,10 +37,19 @@ public class MainActivity extends AppCompatActivity {
     private RadioButton selected;
     private String numberChoice;
     private String rightChoice;
+    private CheckBox checkBox;
     private int questionNumber = 1;
     private int score = 0;
     private boolean first = true;
+    boolean checked;
     private ArrayList<Integer> questionPool = new ArrayList<>();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        start = (Button) findViewById(R.id.start_button);
+    }
 
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
@@ -80,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startApp(View view){
+        checkBox = (CheckBox) findViewById(R.id.checkbox);
         reset = (Button) findViewById(R.id.reset_button);
         questionTextView = (TextView) findViewById(R.id.question);
         a1 = (RadioButton) findViewById(R.id.answer_1);
@@ -89,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         questionHeader = (TextView) findViewById(R.id.question_header);
         submit = (Button) findViewById(R.id.submit_button);
         next = (Button) findViewById(R.id.next_button);
-        start = (Button) findViewById(R.id.start_button);
+
         rg = (RadioGroup) findViewById(R.id.answer_box);
         scoreText = (TextView) findViewById(R.id.score_text);
         resultsText = (TextView) findViewById(R.id.results);
@@ -105,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
         next.setVisibility(View.VISIBLE);
         start.setVisibility(View.INVISIBLE);
         resultsText.setVisibility(View.VISIBLE);
+        checkBox.setChecked(false);
+        checkBox.setVisibility(View.INVISIBLE);
         questionPool.add(1);
         questionPool.add(2);
         questionPool.add(3);
@@ -129,7 +137,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        checked = ((CheckBox) view).isChecked();
+        if(checked){
+            start.setEnabled(true);
+        }
+    }
     public int getQuestion(){
         if(questionPool.size() > 1) {
             int random = (int) (Math.random() * questionPool.size() + 1);
@@ -191,8 +205,9 @@ public class MainActivity extends AppCompatActivity {
     public void reset (View view){
         reset.setVisibility(View.INVISIBLE);
         scoreText.setText("");
-
+        checkBox.setVisibility(View.VISIBLE);
         start.setVisibility(View.VISIBLE);
+        start.setEnabled(false);
         score = 0;
         questionNumber = 1;
     }
