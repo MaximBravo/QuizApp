@@ -1,12 +1,15 @@
 package maximbravo.com.quizapp;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -32,12 +35,14 @@ public class MainActivity extends AppCompatActivity {
     private Button next;
     private Button start;
     private RadioGroup rg;
+    private String name;
     private TextView scoreText;
     private TextView resultsText;
     private RadioButton selected;
     private String numberChoice;
     private String rightChoice;
     private CheckBox checkBox;
+    private EditText editNameBox;
     private int questionNumber = 1;
     private int score = 0;
     private boolean first = true;
@@ -49,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         start = (Button) findViewById(R.id.start_button);
+        editNameBox = (EditText) findViewById(R.id.name);
     }
 
     public void onRadioButtonClicked(View view) {
@@ -95,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         questionHeader = (TextView) findViewById(R.id.question_header);
         submit = (Button) findViewById(R.id.submit_button);
         next = (Button) findViewById(R.id.next_button);
+        editNameBox.setVisibility(View.INVISIBLE);
 
         rg = (RadioGroup) findViewById(R.id.answer_box);
         scoreText = (TextView) findViewById(R.id.score_text);
@@ -133,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
         rightChoice = entry[5];
         next.setEnabled(false);
         selected = null;
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
 
 
@@ -140,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
     public void onCheckboxClicked(View view) {
         // Is the view now checked?
         checked = ((CheckBox) view).isChecked();
-        if(checked){
+        name = editNameBox.getText().toString();
+        if(checked && name.length() > 0){
             start.setEnabled(true);
         }
     }
@@ -167,7 +177,11 @@ public class MainActivity extends AppCompatActivity {
             start.setVisibility(View.INVISIBLE);
 
             reset.setVisibility(View.VISIBLE);
-            scoreText.setText("Your final score is " + score + " out of 10!");
+            if(score < 8) {
+                scoreText.setText("Sorry " + name + ", but you didn't pass with a score of " + score + " out of 10.");
+            } else {
+                scoreText.setText("Congradulations " + name + "! You passed with an amazing score of " + score + " out of 10!");
+            }
 
         }
         entry = Questions.getEntry(getQuestion());
@@ -208,6 +222,8 @@ public class MainActivity extends AppCompatActivity {
         checkBox.setVisibility(View.VISIBLE);
         start.setVisibility(View.VISIBLE);
         start.setEnabled(false);
+        editNameBox.setVisibility(View.VISIBLE);
+        editNameBox.setText("");
         score = 0;
         questionNumber = 1;
     }
