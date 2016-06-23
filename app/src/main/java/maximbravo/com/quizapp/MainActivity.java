@@ -1,268 +1,316 @@
 package maximbravo.com.quizapp;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
 
+    boolean checked;
     private Button reset;
     private String[] entry;
     private TextView questionTextView;
-    private RadioButton a1;
-    private RadioButton a2;
-    private RadioButton a3;
-    private RadioButton a4;
+    private RadioButton r1;
+    private RadioButton r2;
+    private RadioButton r3;
+    private RadioButton r4;
+    private CheckBox c1;
+    private CheckBox c2;
+    private CheckBox c3;
+    private CheckBox c4;
     private TextView questionHeader;
     private Button submit;
     private Button next;
     private Button start;
+    private EditText f;
     private RadioGroup rg;
     private String name;
     private TextView scoreText;
     private TextView resultsText;
-    private RadioButton selected;
-    private String numberChoice;
+    private RadioButton selectedRadioButton;
+    private String radioChoice = "";
     private String rightChoice;
     private CheckBox checkBox;
     private EditText editNameBox;
+    private static String fAnswer = "";
+    private LinearLayout checkBoxAnswerBox;
     private int questionNumber = 1;
     private int score = 0;
+    private ArrayList<String> checkChoice;
+    private boolean radio_checked;
     private boolean first = true;
-    boolean checked;
     private ArrayList<Integer> questionPool = new ArrayList<>();
+    private Questions question;
+    private String questionType;
+    private static TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            fAnswer = s.toString();
+        }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+        @Override
+        public void afterTextChanged(Editable s) {
+            fAnswer = s.toString();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.start);
         start = (Button) findViewById(R.id.start_button);
-        editNameBox = (EditText) findViewById(R.id.name);
+       
     }
 
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
-        boolean checked = ((RadioButton) view).isChecked();
+        boolean radio_checked = ((RadioButton) view).isChecked();
 
         // Check which radio button was clicked
-        switch(view.getId()) {
-            case R.id.answer_1:
-                if (checked) {
-                    selected = (RadioButton) findViewById(R.id.answer_1);
-                    numberChoice = "1";
+        switch (view.getId()) {
+            case R.id.radio_answer_1:
+                if (radio_checked) {
+                    selectedRadioButton = (RadioButton) findViewById(R.id.radio_answer_1);
+                    radioChoice = "1";
                 }
-                    break;
-            case R.id.answer_2:
-                if (checked) {
-                    selected = (RadioButton) findViewById(R.id.answer_2);
-                    numberChoice = "2";
+                break;
+            case R.id.radio_answer_2:
+                if (radio_checked) {
+                    selectedRadioButton = (RadioButton) findViewById(R.id.radio_answer_2);
+                    radioChoice = "2";
                 }
-                    break;
-            case R.id.answer_3:
-                if (checked) {
-                    selected = (RadioButton) findViewById(R.id.answer_3);
-                    numberChoice = "3";
+                break;
+            case R.id.radio_answer_3:
+                if (radio_checked) {
+                    selectedRadioButton = (RadioButton) findViewById(R.id.radio_answer_3);
+                    radioChoice = "3";
                 }
-                    break;
-            case R.id.answer_4:
-                if (checked) {
-                    selected = (RadioButton) findViewById(R.id.answer_4);
-                    numberChoice = "4";
+                break;
+            case R.id.radio_answer_4:
+                if (radio_checked) {
+                    selectedRadioButton = (RadioButton) findViewById(R.id.radio_answer_4);
+                    radioChoice = "4";
                 }
-                    break;
+                break;
         }
     }
 
-    public void startApp(View view){
-        checkBox = (CheckBox) findViewById(R.id.checkbox);
-        reset = (Button) findViewById(R.id.reset_button);
-        questionTextView = (TextView) findViewById(R.id.question);
-        a1 = (RadioButton) findViewById(R.id.answer_1);
-        a2 = (RadioButton) findViewById(R.id.answer_2);
-        a3 = (RadioButton) findViewById(R.id.answer_3);
-        a4 = (RadioButton) findViewById(R.id.answer_4);
-        questionHeader = (TextView) findViewById(R.id.question_header);
-        submit = (Button) findViewById(R.id.submit_button);
-        next = (Button) findViewById(R.id.next_button);
-        editNameBox.setVisibility(View.INVISIBLE);
-
-        rg = (RadioGroup) findViewById(R.id.answer_box);
-        scoreText = (TextView) findViewById(R.id.score_text);
-        resultsText = (TextView) findViewById(R.id.results);
-
-        questionTextView.setVisibility(View.VISIBLE);
-        rg.setVisibility(View.VISIBLE);
-        a1.setVisibility(View.VISIBLE);
-        a2.setVisibility(View.VISIBLE);
-        a3.setVisibility(View.VISIBLE);
-        a4.setVisibility(View.VISIBLE);
-        questionHeader.setVisibility(View.VISIBLE);
-        submit.setVisibility(View.VISIBLE);
-        next.setVisibility(View.VISIBLE);
-        start.setVisibility(View.INVISIBLE);
-        resultsText.setVisibility(View.VISIBLE);
-        checkBox.setChecked(false);
-        checkBox.setVisibility(View.INVISIBLE);
-        questionPool.add(1);
-        questionPool.add(2);
-        questionPool.add(3);
-        questionPool.add(4);
-        questionPool.add(5);
-        questionPool.add(6);
-        questionPool.add(7);
-        questionPool.add(8);
-        questionPool.add(9);
-        questionPool.add(10);
-        entry = Questions.getEntry(getQuestion());
-        questionTextView.setText(entry[0]);
-        questionHeader.setText("Question #1 of 10!");
-        a1.setText(entry[1]);
-        a2.setText(entry[2]);
-        a3.setText(entry[3]);
-        a4.setText(entry[4]);
-        rightChoice = entry[5];
-        next.setEnabled(false);
-        selected = null;
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-
-
-
-    }
     public void onCheckboxClicked(View view) {
-        // Is the view now checked?
-        checked = ((CheckBox) view).isChecked();
-        name = editNameBox.getText().toString();
-        if(checked && name.length() > 0){
-            start.setEnabled(true);
+        boolean check_checked = ((CheckBox) view).isChecked();
+        switch(view.getId()) {
+            case R.id.check_answer_1:
+                if (check_checked){
+                    checkChoice.add("1");
+                } else {
+                    if(checkChoice.contains("1")){
+                        checkChoice.remove("1");
+                    }
+                }
+                break;
+            case R.id.check_answer_2:
+                if (check_checked){
+                    checkChoice.add("2");
+                } else {
+                    if(checkChoice.contains("2")){
+                        checkChoice.remove("2");
+                    }
+                }
+                break;
+            case R.id.check_answer_3:
+                if (check_checked) {
+                    checkChoice.add("3");
+                } else {
+                    if(checkChoice.contains("3")){
+                        checkChoice.remove("3");
+                    }
+                }
+                break;
+            case R.id.check_answer_4:
+                if (check_checked){
+                    checkChoice.add("4");
+                } else {
+                    if(checkChoice.contains("4")){
+                        checkChoice.remove("4");
+                    }
+                }
+                break;
         }
     }
-    public int getQuestion(){
-        if(questionPool.size() > 1) {
-            int random = (int) (Math.random() * questionPool.size() + 1);
-            int ret = questionPool.get(random - 1);
-            questionPool.remove(random - 1);
-            return ret;
-        } else {
-            return questionPool.get(0);
-        }
 
-    }
-    public void refresh (View view) {
-        questionNumber++;
-        if(questionNumber == 11) {
-            questionTextView.setVisibility(View.INVISIBLE);
-            questionHeader.setVisibility(View.INVISIBLE);
-            rg.setVisibility(View.INVISIBLE);
-            resultsText.setVisibility(View.INVISIBLE);
-            submit.setVisibility(View.INVISIBLE);
-            next.setVisibility(View.INVISIBLE);
-            start.setVisibility(View.INVISIBLE);
 
-            reset.setVisibility(View.VISIBLE);
-            if(score < 8) {
-                scoreText.setText("Sorry " + name + ", but you didn't pass with a score of " + score + " out of 10.");
-            } else {
-                scoreText.setText("Congradulations " + name + "! You passed with an amazing score of " + score + " out of 10!");
-            }
+    public void refresh(View view) {
+        if(view.equals(start)){
+            setContentView(R.layout.activity_main);
+            questionHeader = (TextView) findViewById(R.id.question_header);
+            questionTextView = (TextView) findViewById(R.id.question);
+            resultsText = (TextView) findViewById(R.id.results);
+            rg = (RadioGroup) findViewById(R.id.radio_answer_group);
+            c1 = (CheckBox) findViewById(R.id.check_answer_1);
+            c2 = (CheckBox) findViewById(R.id.check_answer_2);
+            c3 = (CheckBox) findViewById(R.id.check_answer_3);
+            c4 = (CheckBox) findViewById(R.id.check_answer_4);
+            r1 = (RadioButton) findViewById(R.id.radio_answer_1);
+            r2 = (RadioButton) findViewById(R.id.radio_answer_2);
+            r3 = (RadioButton) findViewById(R.id.radio_answer_3);
+            r4 = (RadioButton) findViewById(R.id.radio_answer_4);
+            checkChoice = new ArrayList<>();
+            f = (EditText) findViewById(R.id.free_answer);
+            checkBoxAnswerBox = (LinearLayout) findViewById(R.id.checkbox_linearLayout);
+            submit = (Button) findViewById(R.id.submit_button);
+            next = (Button) findViewById(R.id.next_button);
 
         }
-        entry = Questions.getEntry(getQuestion());
+        if(questionNumber == 11){
+            setContentView(R.layout.end);
+            scoreText = (TextView) findViewById(R.id.score_text);
+            scoreText.setText("Your score is " + score + " out of 10!");
+        }
+        next.setEnabled(false);
+        submit.setEnabled(true);
+        checkBoxAnswerBox.setVisibility(View.INVISIBLE);
+        rg.setVisibility(View.INVISIBLE);
+        f.setVisibility(View.INVISIBLE);
         rg.clearCheck();
-        a1.setEnabled(true);
-        a2.setEnabled(true);
-        a3.setEnabled(true);
-        a4.setEnabled(true);
-        a1.setTextColor(Color.BLACK);
-        a2.setTextColor(Color.BLACK );
-        a3.setTextColor(Color.BLACK );
-        a4.setTextColor(Color.BLACK );
-        if(selected != null) {
-            submit.setEnabled(true);
-
-            next.setEnabled(false);
-            questionTextView.setText(entry[0]);
-            a1.setText(entry[1]);
-            a2.setText(entry[2]);
-            a3.setText(entry[3]);
-            a4.setText(entry[4]);
-            questionHeader.setText("Question #" + questionNumber + " of 10!");
-            resultsText.setText("");
-            rightChoice = entry[5];
+        f.setText("");
+        c1.setChecked(false);
+        c2.setChecked(false);
+        c3.setChecked(false);
+        c4.setChecked(false);
+        question = new Questions(questionNumber);
+        questionType = question.getQuestionType();
 
 
 
-            first = false;
-            selected = null;
-        } else {
-            Toast toast = Toast.makeText(this, "You must choose an option.", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-    }
-    public void reset (View view){
-        reset.setVisibility(View.INVISIBLE);
-        scoreText.setText("");
-        checkBox.setVisibility(View.VISIBLE);
-        start.setVisibility(View.VISIBLE);
-        start.setEnabled(false);
-        editNameBox.setVisibility(View.VISIBLE);
-        editNameBox.setText("");
-        score = 0;
-        questionNumber = 1;
-    }
+        resultsText.setText("");
+        switch (questionType) {
+            case "c":
 
-    public void submit (View view){
+                checkBoxAnswerBox.setVisibility(View.VISIBLE);
 
-        if(selected != null) {
-            a1.setEnabled(false);
-            a2.setEnabled(false);
-            a3.setEnabled(false);
-            a4.setEnabled(false);
-            if (numberChoice.equals(rightChoice)) {
-                resultsText.setText("Correct!");
-                selected.setTextColor(Color.parseColor("#388E3C"));
-                submit.setEnabled(false);
-                next.setEnabled(true);
-                score++;
-            } else {
-                resultsText.setText("Incorrect!");
-                if(rightChoice.equals("1")){
-                    a1.setTextColor(Color.parseColor("#388E3C"));
-                }
-                if(rightChoice.equals("2")){
-                    a2.setTextColor(Color.parseColor("#388E3C"));
-                }
-                if(rightChoice.equals("3")){
-                    a3.setTextColor(Color.parseColor("#388E3C"));
-                }
-                if(rightChoice.equals("4")){
-                    a4.setTextColor(Color.parseColor("#388E3C"));
-                }
-                selected.setTextColor(Color.parseColor("#C62828"));
-                submit.setEnabled(false);
-                next.setEnabled(true);
-            }
-        } else {
-            Toast toast = Toast.makeText(this, "You must choose an option.", Toast.LENGTH_SHORT);
-            toast.show();
+
+                c1.setText(question.getQuestionOptions()[0]);
+                c2.setText(question.getQuestionOptions()[1]);
+                c3.setText(question.getQuestionOptions()[2]);
+                c4.setText(question.getQuestionOptions()[3]);
+
+                questionHeader.setText("Question #" + questionNumber + " of 10!");
+                questionTextView.setText(question.getQuestion());
+                break;
+            case "r":
+
+
+                rg.setVisibility(View.VISIBLE);
+
+                r1.setText(question.getQuestionOptions()[0]);
+                r2.setText(question.getQuestionOptions()[1]);
+                r3.setText(question.getQuestionOptions()[2]);
+                r4.setText(question.getQuestionOptions()[3]);
+
+                questionHeader.setText("Question #" + questionNumber + " of 10!");
+                questionTextView.setText(question.getQuestion());
+                break;
+
+            case "f":
+
+                f.setVisibility(View.VISIBLE);
+                f.addTextChangedListener(textWatcher);
+
+                questionHeader.setText("Question #" + questionNumber + " of 10!");
+                questionTextView.setText(question.getQuestion());
+                break;
         }
 
     }
+
+    public void submit(View view) {
+
+        switch (questionType) {
+            case "c":
+                String finalCheckAnswer = "";
+                for(int i = 0; i < checkChoice.size(); i++){
+                    finalCheckAnswer += checkChoice.get(i);
+                }
+                if(finalCheckAnswer.equals(question.getAnswer())){
+                    correct();
+                } else {
+                    incorrect();
+                }
+                submit.setEnabled(false);
+                next.setEnabled(true);
+                break;
+            case "r":
+                if(radioChoice.equals("")){
+                    Context context = getApplicationContext();
+                    CharSequence text = "You must select an option.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                    break;
+                }
+                if(radioChoice.equals(question.getAnswer())){
+                    correct();
+                } else {
+                    incorrect();
+                }
+                submit.setEnabled(false);
+                next.setEnabled(true);
+                break;
+            case "f":
+                if(fAnswer.equals("")){
+                    Context context = getApplicationContext();
+                    CharSequence text = "You must select an option.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                    break;
+                }
+                if(fAnswer.equals(question.getAnswer())){
+                    correct();
+                } else {
+                    incorrect();
+                }
+                submit.setEnabled(false);
+                next.setEnabled(true);
+                break;
+        }
+        questionNumber++;
+
+    }
+
+    public void correct(){
+        resultsText.setText("Correct!");
+        radioChoice = "";
+        fAnswer = "";
+        checkChoice.clear();
+        score++;
+    }
+    public void incorrect(){
+        resultsText.setText("Incorrect");
+        radioChoice = "";
+        fAnswer = "";
+        checkChoice.clear();
+    }
+
+
+
 }

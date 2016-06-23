@@ -1,10 +1,6 @@
 package maximbravo.com.quizapp;
 
-import android.view.View;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by wendy on 6/15/2016.
@@ -33,69 +29,83 @@ import java.util.HashMap;
      What type of animal is the largest primate in the world?
  */
 public class Questions {
-    private static String q1 = "What food makes up nearly all (around 99%) of a Giant Panda’s diet?";
-    private static String q2 = "True or false? Mice live for up to 10 years.";
-    private static String q3 = "What is the name of the phobia that involves an abnormal fear of spiders?";
-    private static String q4 = "What is the largest type of ‘big cat’ in the world?";
-    private static String q5 = "True or false? Crocodiles have no sweat glands so they use their mouths to release heat.";
-    private static String q6 = "Are butterflies insects?";
-    private static String q7 = "What are female elephants called?";
-    private static String q8 = "True or false? Bats are mammals.";
-    private static String q9 = "Bees are found on every continent of earth except for one, which is it?";
-    private static String q10 = "True or false? Cats spend an average of 13 to 14 hours a day sleeping.";
-    private static String q11 = "";
-    private static String[] questions = {q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11};
 
-    private static String[] a1 = {"Lettuce", "Bamboo", "Carrots", "Shoots", "2"};
-    private static String[] a2 = {"True", "False", "Apples", "Oranges", "2"};
-    private static String[] a3 = {"Venustraphobia", "Anthropophobia", "Gamophobia", "Arachnophobia", "4"};
-    private static String[] a4 = {"Jaguar", "Puma", "Tiger", "Lion", "3"};
-    private static String[] a5 = {"True", "False", "Owl", "Bear", "1"};
-    private static String[] a6 = {"No", "Yes", "Maybe", "Maybe Not", "2"};
-    private static String[] a7 = {"Shrimp", "Cows", "Goats", "Chimps", "2"};
-    private static String[] a8 = {"Dog", "No", "True", "False", "3"};
-    private static String[] a9 = {"Antarctica", "Africa", "Arcitc", "South Pole", "1"};
-    private static String[] a10 = {"False", "Trash", "Paper", "True", "4"};
-    private static String[] a11 = {"3", "4", "5", "2", "1"};
-    private static ArrayList<String[]> answers = new ArrayList<String[]>();
 
-    private static boolean addedAnswers = false;
+    private static String[] q1 = {"What food makes up nearly all (around 99%) of a Giant Panda’s diet?",
+            "r", "Lettuce", "Bamboo", "Carrots", "Shoots", "2"};
+    private static String[] q2 = {"Check all that are mammals.",
+            "c", "Dog", "Cat", "Chicken", "Bat", "124"};
+    private static String[] q3 = {"Write down what key word you use in Java to indicate you want a variable to hold text. (Capitalization matters!)",
+            "f", "String"};
+    private static String[] q4 = {"What is the largest type of ‘big cat’ in the world?",
+            "r", "Jaguar", "Puma", "Tiger", "Lion", "3"};
+    private static String[] q5 = {"What is the name of the phobia that involves an abnormal fear of spiders?",
+            "r", "Venustraphobia", "Anthropophobia", "Gamophobia", "Arachnophobia", "4"};
+    private static String[] q6 = {"Are butterflies insects?",
+            "r", "No", "Yes", "Maybe", "Maybe Not", "2"};
+    private static String[] q7 = {"What is a baby elephant called? (All lowercase, please)",
+            "f", "calf"};
+    private static String[] q8 = {"True or false? Mice live for up to 10 years.",
+            "r", "True", "False", "Apples", "Oranges", "2"};
+    private static String[] q9 = {"Check all contenents where bees are found?",
+            "c", "Antarctica", "Africa", "North America", "Europe", "234"};
+    private static String[] q10 ={ "True or false? Cats spend an average of 13 to 14 hours a day sleeping.",
+            "r", "False", "Trash", "Paper", "True", "4"};
 
-    public static void makeAnswers(){
-        answers.add(a1);
-        answers.add(a2);
-        answers.add(a3);
-        answers.add(a4);
-        answers.add(a5);
-        answers.add(a6);
-        answers.add(a7);
-        answers.add(a8);
-        answers.add(a9);
-        answers.add(a10);
-        answers.add(a11);
+
+    private static ArrayList<String[]> QAndA = new ArrayList<String[]>();
+    private static String[] currentQuestion;
+    private static int qNumber;
+
+
+    public Questions(int qN){
+        qNumber = qN - 1;
+        makeQAndA();
     }
 
-    public static String[] getEntry(int qN){
-        int qNumber = qN - 1;
-        if(!addedAnswers){
-            makeAnswers();
-            addedAnswers = true;
+    private static void makeQAndA(){
+        QAndA.add(q1);
+        QAndA.add(q2);
+        QAndA.add(q3);
+        QAndA.add(q4);
+        QAndA.add(q5);
+        QAndA.add(q6);
+        QAndA.add(q7);
+        QAndA.add(q8);
+        QAndA.add(q9);
+        QAndA.add(q10);
+        currentQuestion = QAndA.get(qNumber);
+    }
+
+    public static String[] getQuestionOptions(){
+        if(currentQuestion[1].equals("r") || currentQuestion[1].equals("c")){
+            String[] options = {
+                currentQuestion[2],
+                currentQuestion[3],
+                currentQuestion[4],
+                currentQuestion[5],
+                currentQuestion[6]
+            };
+            return options;
+        } else {
+            String[] options = {
+                currentQuestion[2]
+            };
+            return options;
         }
-        String[] ret = new String[6];
-        String[] options = answers.get(qNumber);
-        // Adds question
-        ret[0] = questions[qNumber];
-        // first option
-        ret[1] = options[0];
-        // second option
-        ret[2] = options[1];
-        // third option
-        ret[3] = options[2];
-        // fourth option
-        ret[4] = options[3];
-        // right answer
-        ret[5] = options[4];
-        return ret;
+    }
+
+    public static String getQuestion(){
+        return currentQuestion[0];
+    }
+    public static String getAnswer(){
+        if(getQuestionType().equals("f")){
+            return currentQuestion[2];
+        }
+        return currentQuestion[6];
+    }
+    public static String getQuestionType(){
+        return currentQuestion[1];
     }
 //    public static int correctAnswer(int qN){
 //        String[] options = answers.get(qN - 1);
