@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start);
         start = (Button) findViewById(R.id.start_button);
-       
+
     }
 
     public void onRadioButtonClicked(View view) {
