@@ -306,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void incorrect(){
         resultsText.setText("Incorrect");
+
         radioChoice = "";
         fAnswer = "";
         checkChoice.clear();
